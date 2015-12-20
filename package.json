@@ -1,0 +1,31 @@
+{
+  "name": "backup-daemon",
+  "description": "A realtime differential backup daemon in nodejs.",
+  "version": "0.0.1",
+  "author": "Alejandro Santiago Nieto",
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^1.8.1",
+    "rsync": "^0.4.0"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "jscs": "^2.0.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha test/*.js",
+    "watch": "nodemon index.js --watch index.js --watch lib/*.js",
+    "jshint": "jshint index.js lib/*.js test/*.js",
+    "jscs": "jscs index.js lib/*.js test/*.js",
+    "jscs:fix": "jscs --fix index.js lib/*.js test/*.js",
+    "check": "npm run test && npm run jshint && npm run jscs && npm outdated"
+  }
+}
