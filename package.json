@@ -1,31 +1,41 @@
 {
   "name": "backup-daemon",
   "description": "A realtime differential backup daemon in nodejs.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Alejandro Santiago Nieto",
   "license": "MIT",
   "dependencies": {
-    "nodemon": "^1.8.1",
-    "rsync": "^0.4.0"
+    "chokidar": "^1.4.1",
+    "rsync": "^0.4.0",
+    "taskerjs": "^1.1.1",
+    "yargs": "^3.31.0"
   },
   "devDependencies": {
     "chai": "^3.2.0",
     "jscs": "^2.0.0",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "nodemon": "^1.8.1"
   },
   "main": "index.js",
   "files": [
     "index.js",
-    "lib"
+    "cli.js"
   ],
+  "bin": {
+    "backup-daemon": "cli.js"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "mocha test/*.js",
-    "watch": "nodemon index.js --watch index.js --watch lib/*.js",
-    "jshint": "jshint index.js lib/*.js test/*.js",
-    "jscs": "jscs index.js lib/*.js test/*.js",
-    "jscs:fix": "jscs --fix index.js lib/*.js test/*.js",
+    "watch": "nodemon index.js --watch index.js",
+    "jshint": "jshint index.js test/*.js",
+    "jscs": "jscs index.js test/*.js",
+    "jscs:fix": "jscs --fix index.js test/*.js",
     "check": "npm run test && npm run jshint && npm run jscs && npm outdated"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alemures/backup-daemon.git"
   }
 }
