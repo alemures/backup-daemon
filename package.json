@@ -1,13 +1,14 @@
 {
   "name": "backup-daemon",
   "description": "A realtime differential backup daemon in nodejs.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Alejandro Santiago Nieto",
   "license": "MIT",
   "dependencies": {
     "chokidar": "^1.4.1",
     "rsync": "^0.4.0",
     "taskerjs": "^1.1.1",
+    "utjs": "^1.3.5",
     "yargs": "^3.31.0"
   },
   "devDependencies": {
