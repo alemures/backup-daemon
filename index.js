@@ -108,7 +108,7 @@ function doBackup() {
 
 // Makes the ignore patters compatible with chokidar
 function ignoreToChokidar(ignore) {
-  return ignore.map(function(e) {
+  return ignore.map(function (e) {
     e = ut.endsWith(e, '/') ? e.substring(0, e.length - 1) : e;
     return '**/' + e;
   });
