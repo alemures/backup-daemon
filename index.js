@@ -1,15 +1,12 @@
-'use strict';
+const chokidar = require('chokidar');
+const Rsync = require('rsync');
+const { Delayer } = require('taskerjs');
+const { logger } = require('utjs');
+const yargs = require('yargs');
 
-var chokidar = require('chokidar');
-var Rsync = require('rsync');
-var Delayer = require('taskerjs').Delayer;
-var ut = require('utjs');
-var logger = ut.logger;
-var yargs = require('yargs');
+const LOG_LEVELS = ['debug', 'info', 'warn', 'error'];
 
-var LOG_LEVELS = ['debug', 'info', 'warn', 'error'];
-
-var argv = yargs
+const { argv } = yargs
   .usage('Usage: $0 source destination [options]')
   .demand(2)
 
@@ -41,16 +38,15 @@ var argv = yargs
   .help('h')
   .alias('h', 'help')
   .epilog('https://github.com/alemures/backup-daemon')
-  .strict()
-  .argv;
+  .strict();
 
-var source = argv._[0];
-var destination = argv._[1];
+const source = argv._[0];
+const destination = argv._[1];
 logger.setLogLevel(LOG_LEVELS.indexOf(argv.log) + 1);
 
-var running = false;
-var delayer = new Delayer();
-var rsync = new Rsync()
+let running = false;
+const delayer = new Delayer();
+const rsync = new Rsync()
   .flags('CavzP')
   .source(source)
   .destination(destination);
@@ -67,7 +63,48 @@ if (argv.ignore) {
   rsync.exclude(argv.ignore);
 }
 
-var chokidarConfig = {};
+function doBackup() {
+  running = true;
+  rsync.execute(
+    (err) => {
+      running = false;
+
+      if (err) {
+        logger.error(err);
+        return;
+      }
+
+      logger.info('Backup completed!');
+      logger.info('Waiting for changes...');
+    },
+
+    (data) => {
+      process.stdout.write(data);
+    },
+
+    (data) => {
+      process.stdout.write(data);
+    }
+  );
+}
+
+function onChanges(event, path) {
+  logger.debug('Change:', event, path);
+  if (!running && !delayer.isDelayed('doBackup')) {
+    logger.info(`Changes detected, running backup in ${argv.wait} ms`);
+    delayer.add('doBackup', doBackup, argv.wait);
+  }
+}
+
+// Makes the ignore patters compatible with chokidar
+function ignoreToChokidar(ignore) {
+  return ignore.map((e) => {
+    const element = e.endsWith('/') ? e.substring(0, e.length - 1) : e;
+    return `**/${element}`;
+  });
+}
+
+const chokidarConfig = {};
 
 if (argv.ignore) {
   logger.debug('Ignored:', argv.ignore);
@@ -75,41 +112,3 @@ if (argv.ignore) {
 }
 
 chokidar.watch(source, chokidarConfig).on('all', onChanges);
-
-function onChanges(event, path) {
-  logger.debug('Change:', event, path);
-  if (!running && !delayer.isDelayed('doBackup')) {
-    logger.info('Changes detected, running backup in ' + argv.wait + ' ms');
-    delayer.add('doBackup', doBackup, argv.wait);
-  }
-}
-
-function doBackup() {
-  running = true;
-  rsync.execute(function onExecute(err, code, cmd) {
-    running = false;
-
-    if (err) {
-      return logger.error(err);
-    }
-
-    logger.info('Backup completed!');
-    logger.info('Waiting for changes...');
-  },
-
-  function stdoutHandler(data) {
-    process.stdout.write(data);
-  },
-
-  function stderrHandler(data) {
-    process.stdout.write(data);
-  });
-}
-
-// Makes the ignore patters compatible with chokidar
-function ignoreToChokidar(ignore) {
-  return ignore.map(function (e) {
-    e = ut.endsWith(e, '/') ? e.substring(0, e.length - 1) : e;
-    return '**/' + e;
-  });
-}

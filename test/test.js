@@ -1,11 +1,9 @@
-'use strict';
+const { describe } = require('mocha');
+const { it } = require('mocha');
+const { assert } = require('chai');
 
-var describe = require('mocha').describe;
-var it = require('mocha').it;
-var chai = require('chai');
-
-describe('test', function () {
-  it('should be true', function () {
-    chai.assert(true, 'true');
+describe('test', () => {
+  it('should be true', () => {
+    assert(true, 'true');
   });
 });

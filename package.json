@@ -1,22 +1,9 @@
 {
   "name": "backup-daemon",
-  "description": "A realtime differential backup daemon in nodejs.",
   "version": "1.0.1",
+  "description": "A realtime differential backup daemon in nodejs.",
   "author": "Alejandro Santiago Nieto",
-  "license": "MIT",
-  "dependencies": {
-    "chokidar": "^3.5.2",
-    "rsync": "0.6.x",
-    "taskerjs": "1.x.x",
-    "utjs": "^4.0.0",
-    "yargs": "^17.2.1"
-  },
-  "devDependencies": {
-    "chai": "4.x.x",
-    "jscs": "3.x.x",
-    "jshint": "2.x.x",
-    "mocha": "^9.1.2"
-  },
+  "license": "ISC",
   "main": "index.js",
   "files": [
     "index.js",
@@ -25,13 +12,36 @@
   "bin": {
     "backup-daemon": "cli.js"
   },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "rsync": "~0.6.1",
+    "taskerjs": "^2.0.1",
+    "utjs": "^4.0.0",
+    "yargs": "^17.6.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/rsync": "^0.4.32",
+    "@types/yargs": "^17.0.20",
+    "chai": "^4.3.7",
+    "eslint": "^8.5.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.9.4"
+  },
   "scripts": {
-    "start": "node index.js",
     "test": "mocha test/*.js",
-    "jshint": "jshint index.js test/*.js",
-    "jscs": "jscs index.js test/*.js",
-    "jscs:fix": "jscs --fix index.js test/*.js",
-    "check": "npm run test && npm run jshint && npm run jscs && npm outdated"
+    "test:cover": "nyc --reporter=lcov --reporter=text-summary --all --include \"index.js\" npm test",
+    "lint": "eslint index.js test/*.js",
+    "lint:fix": "npm run lint -- --fix",
+    "types": "tsc",
+    "check": "npm test && npm run lint && npm run types && npm outdated"
   },
   "repository": {
     "type": "git",
