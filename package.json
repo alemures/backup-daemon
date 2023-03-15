@@ -1,47 +1,47 @@
 {
   "name": "backup-daemon",
-  "version": "1.0.1",
   "description": "A realtime differential backup daemon in nodejs.",
+  "version": "1.0.2",
   "author": "Alejandro Santiago Nieto",
   "license": "ISC",
-  "main": "index.js",
-  "files": [
-    "index.js",
-    "cli.js"
-  ],
-  "bin": {
-    "backup-daemon": "cli.js"
-  },
   "dependencies": {
     "chokidar": "^3.5.3",
     "rsync": "~0.6.1",
     "taskerjs": "^2.0.1",
-    "utjs": "^4.0.0",
+    "winston": "^3.8.2",
     "yargs": "^17.6.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.4",
-    "@types/mocha": "^10.0.1",
+    "@types/jest": "^29.4.0",
+    "@types/node": "^18.0.6",
     "@types/rsync": "^0.4.32",
-    "@types/yargs": "^17.0.20",
-    "chai": "^4.3.7",
-    "eslint": "^8.5.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "mocha": "^10.2.0",
-    "nyc": "^15.1.0",
-    "prettier": "^2.5.1",
-    "typescript": "^4.9.4"
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.4.3",
+    "prettier": "^2.8.4",
+    "ts-jest": "^29.0.5",
+    "typescript": "^4.7.4"
   },
+  "main": "dist/index.js",
+  "bin": {
+    "backup-daemon": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "mocha test/*.js",
-    "test:cover": "nyc --reporter=lcov --reporter=text-summary --all --include \"index.js\" npm test",
-    "lint": "eslint index.js test/*.js",
+    "build": "tsc -p tsconfig.build.json",
+    "build:watch": "npm run build -- --watch",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "test:cover": "npm test -- --coverage",
+    "lint": "eslint --ext .ts .",
     "lint:fix": "npm run lint -- --fix",
-    "types": "tsc",
-    "check": "npm test && npm run lint && npm run types && npm outdated"
+    "check": "npm test && npm run lint",
+    "prepublishOnly": "npm run check && npm run build"
   },
   "repository": {
     "type": "git",

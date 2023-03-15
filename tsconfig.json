@@ -1,12 +1,15 @@
 {
+  "include": ["src", "test"],
   "compilerOptions": {
-    "checkJs": true,
+    // Targeting NodeJS 12 (oldest supported LTS version)
+    "lib": ["ES2019"],
+    "module": "CommonJS",
+    "target": "ES2019",
+    "outDir": "dist",
+    "declaration": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "target": "ES2015",
-    "moduleResolution": "Node",
-    "noEmit": true,
-    "resolveJsonModule": true
-  },
-  "files": ["index.js"],
-  "include": ["test"]
+    "skipLibCheck": true
+  }
 }
